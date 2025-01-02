@@ -1,22 +1,29 @@
-import { UserService } from "./user.service";
+import {UserService} from "./user.service";
 import { User } from "../interfaces/user.interface";
 
 export class AuthService {
-  private userService = new UserService();
+    private userService = new UserService();
 
-  public validateUser(email: string, password: string): User | undefined {
-    const user = this.userService.findUserByEmail(email);
-    if (user && user.password === password) {
-      return user;
+    public async validateUser(email: string, password: string): Promise<User | undefined> {
+        const user = await this.userService.findUserByEmail(email);
+        if (user && user.password === password) {
+            return user;
+        }
+        return undefined;
     }
-    return undefined;
+
+    public async isEmailTaken(email: string): Promise<boolean> {
+      try {
+          const user = await this.userService.findUserByEmail(email);
+          return !!user;
+      } catch (error) {
+          console.error("Error checking if email is taken:", error);
+          throw new Error("Error checking if email is taken");
+      }
   }
 
-  public isEmailTaken(email: string): boolean {
-    return !!this.userService.findUserByEmail(email);
-  }
-
-  public createUser(email: string, password: string): User {
-    return this.userService.createUser(email, password);
-  }
+    public async createUser(email: string, password: string): Promise<User> {
+        const user = await this.userService.createUser(email, password);
+        return user;
+    }
 }

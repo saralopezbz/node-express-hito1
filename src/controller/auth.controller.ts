@@ -3,26 +3,39 @@ import { AuthService } from "../services/auth.service";
 
 const authService = new AuthService();
 
-export const login = (req: Request, res: Response): void => {
-  const { email, password } = req.body;
-  const user = authService.validateUser(email, password);
+// Login de usuario
+export const login = async (req: Request, res: Response): Promise<void> => {
+    const { email, password } = req.body;
 
-  if (!user) {
-    res.status(401).json({ message: "Invalid credentials" });
-    return;
-  }
+    try {
+        const user = await authService.validateUser(email, password); // Usar await
 
-  res.json({ message: "Login successful", user });
+        if (!user) {
+            res.status(401).json({ message: "Invalid credentials" });
+            return;
+        }
+
+        res.json({ message: "Login successful", user });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error: error});
+    }
 };
 
-export const register = (req: Request, res: Response): void => {
-  const { email, password } = req.body;
+// Registro de usuario
+export const register = async (req: Request, res: Response): Promise<void> => {
+    const { email, password } = req.body;
 
-  if (authService.isEmailTaken(email)) {
-    res.status(400).json({ message: "User already exists" });
-    return;
-  }
+    try {
+        const emailTaken = await authService.isEmailTaken(email); // Usar await
 
-  const newUser = authService.createUser(email, password);
-  res.status(201).json({ message: "User registered successfully", newUser });
+        if (emailTaken) {
+            res.status(400).json({ message: "User already exists" });
+            return;
+        }
+
+        const newUser = await authService.createUser(email, password); // Usar await
+        res.status(201).json({ message: "User registered successfully", newUser });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error: error });
+    }
 };

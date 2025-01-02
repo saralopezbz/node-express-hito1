@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
+import pool from "./config/db";
 
 const app = express();
 const PORT = 3000;
@@ -9,6 +10,12 @@ const PORT = 3000;
 // Middleware
 app.use(bodyParser.json());
 
+//conexion a la base de datos
+
+pool
+  .connect()
+  .then(() => console.log("conexion a la base de datos exitosa"))
+  .catch((error) => console.error("Error al conectar con la base de"));
 // Rutas
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);

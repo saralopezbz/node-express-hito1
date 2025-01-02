@@ -1,55 +1,82 @@
-# Proyecto Node.js - Hito 1
+Aquí tienes el `README.md` actualizado con la inclusión de los archivos `.prettierrc` y `package-lock.json` en la estructura del proyecto:
 
-Este proyecto es una aplicación backend creada con **Node.js** y **Express**, que incluye funcionalidades básicas como registro, inicio de sesión y gestión de usuarios. También cuenta con rutas públicas y protegidas para ilustrar el funcionamiento de la autenticación básica.
+---
+
+# Proyecto Node.js - Hito 2
+
+Este proyecto es una evolución del **Hito 1**, implementando la gestión de usuarios y autenticación básica utilizando **PostgreSQL** como base de datos para persistencia. Se han añadido rutas y servicios para manejar operaciones de registro e inicio de sesión.
 
 ---
 
 ## **Instalación y Configuración**
 
-1. **Clonar el Repositorio**:
+### **1. Clonar el Repositorio**
 
-   ```bash
-   git clone https://github.com/saralopezbz/node-express-hito1.git
-   cd node-express-hito1
-   ```
+```bash
+git clone https://github.com/saralopezbz/node-express-hito2.git
+cd node-express-hito2
+```
 
-2. **Instalar Dependencias**:
+### **2. Instalar Dependencias**
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
-3. **Estructura del Proyecto**:
+### **3. Configurar la Base de Datos**
 
-   ```plaintext
-   Hito01/
-   |-- data/
-   |   |-- users.json
-   |-- src/
-   |   |-- controller/
-   |   |   |-- auth.controller.ts
-   |   |   |-- user.controller.ts
-   |   |-- interfaces/
-   |   |   |-- user.interface.ts
-   |   |-- routes/
-   |   |   |-- auth.route.ts
-   |   |   |-- user.route.ts
-   |   |-- services/
-   |   |   |-- auth.service.ts
-   |   |   |-- user.service.ts
-   |   |-- index.ts
-   |-- .gitignore
-   |-- package.json
-   |-- tsconfig.json
-   ```
+Crear la base de datos y la tabla `users` en PostgreSQL:
 
-4. **Ejecutar el Servidor**:
+```sql
+CREATE DATABASE hito2_db;
 
-   ```bash
-   npm run dev
-   ```
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+```
 
-   El servidor estará disponible en: `http://localhost:3000`
+### **4. Ejecutar el Servidor**
+
+```bash
+npm run dev
+```
+
+El servidor estará disponible en: `http://localhost:3000`.
+
+---
+
+## **Estructura del Proyecto**
+
+```plaintext
+NODE-EXPRESS-HITO2/
+|-- imagenes/                  # Capturas de pruebas
+|-- node_modules/              # Dependencias del proyecto
+|-- src/
+|   |-- config/
+|   |   |-- db.ts              # Configuración de la conexión a PostgreSQL
+|   |-- controller/
+|   |   |-- auth.controller.ts # Controlador de autenticación
+|   |   |-- user.controller.ts # Controlador de usuarios
+|   |-- interfaces/
+|   |   |-- user.interface.ts  # Definición de la interfaz de Usuario
+|   |-- models/
+|   |   |-- user.model.ts      # Modelo de usuario (PostgreSQL)
+|   |-- routes/
+|   |   |-- auth.route.ts      # Rutas de autenticación
+|   |   |-- user.route.ts      # Rutas de usuarios
+|   |-- services/
+|   |   |-- auth.service.ts    # Servicios de autenticación
+|   |   |-- user.service.ts    # Servicios de usuarios
+|   |-- index.ts               # Archivo principal del servidor
+|-- .gitignore                 # Archivos y carpetas ignorados por Git
+|-- .prettierrc                # Configuración de Prettier
+|-- package.json               # Dependencias y scripts
+|-- package-lock.json          # Versiones exactas de las dependencias instaladas
+|-- README.md                  # Documentación del proyecto
+|-- tsconfig.json              # Configuración de TypeScript
+```
 
 ---
 
@@ -73,9 +100,8 @@ Este proyecto es una aplicación backend creada con **Node.js** y **Express**, q
   {
     "message": "User registered successfully",
     "newUser": {
-      "id": 1672538123,
-      "email": "test@example.com",
-      "password": "123456"
+      "id": 1,
+      "email": "test@example.com"
     }
   }
   ```
@@ -96,77 +122,33 @@ Este proyecto es una aplicación backend creada con **Node.js** y **Express**, q
   {
     "message": "Login successful",
     "user": {
-      "id": 1672538123,
-      "email": "test@example.com",
-      "password": "123456"
+      "id": 1,
+      "email": "test@example.com"
     }
-  }
-  ```
-
-### **2. Gestión de Usuarios**
-
-#### **Obtener Usuarios**
-
-- **Endpoint:** `/users`
-- **Método:** `GET`
-- **Respuesta Exitosa:**
-  ```json
-  [
-    {
-      "id": 1672538123,
-      "email": "test@example.com",
-      "password": "123456"
-    }
-  ]
-  ```
-
-### **3. Rutas Adicionales**
-
-#### **Ruta Pública**
-
-- **Endpoint:** `/public`
-- **Método:** `GET`
-- **Respuesta Exitosa:**
-  ```json
-  {
-    "message": "This is a public route"
-  }
-  ```
-
-#### **Ruta Protegida**
-
-- **Endpoint:** `/protected`
-- **Método:** `GET`
-- **Headers:**
-  ```
-  Authorization: simple-secret
-  ```
-- **Respuesta Exitosa:**
-  ```json
-  {
-    "message": "You have accessed a protected route"
-  }
-  ```
-- **Respuesta de Error:**
-  ```json
-  {
-    "message": "Forbidden: Invalid or missing authorization header"
   }
   ```
 
 ---
 
-## **Detalles Técnicos**
+## **Tecnologías Utilizadas**
 
-- **Lenguaje:** TypeScript
-- **Framework:** Express
-- **Gestión de Datos:** Los datos de usuarios se almacenan en un archivo `users.json` ubicado en la carpeta `data/`.
-- **Middleware:**
-  - `body-parser` para parsear solicitudes JSON.
-  - Rutas protegidas simples usando encabezados de autorización.
+- **Node.js** y **Express** para el servidor.
+- **TypeScript** para tipado estático.
+- **PostgreSQL** para la base de datos.
+- **Prettier** para el formato del código.
+
+---
+
+## **Pruebas**
+
+Se realizaron pruebas de las rutas de autenticación (`/auth/register` y `/auth/login`) utilizando **Thunder Client**, confirmando los siguientes flujos:
+- Registro exitoso de nuevos usuarios.
+- Validación de credenciales para inicio de sesión.
 
 ---
 
 ## **Licencia**
 
 Este proyecto está bajo la licencia MIT. Puedes consultar más detalles en el archivo `LICENSE`.
+
+---

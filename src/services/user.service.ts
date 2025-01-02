@@ -1,35 +1,79 @@
-import fs from "fs";
-import { fileURLToPath } from "url";
-import path from "path";
 import { User } from "../interfaces/user.interface";
+import pool from "../config/db";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const usersFilePath = path.join(__dirname, "../../data/users.json");
+
 
 export class UserService {
-  private getUsers(): User[] {
-    return JSON.parse(fs.readFileSync(usersFilePath, "utf-8"));
-  }
+  // Obtener todos los usuarios
 
-  private saveUsers(users: User[]): void {
-    fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
-  }
+ public async findUserByEmail(email: string): Promise<User | null> {
+    try {
+        const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        return result.rows[0] || null;
+    } catch (error) {
+        console.error("Error finding user by email:", error);
+        throw new Error("Error finding user by email");
+    }
+}
 
-  public findUserByEmail(email: string): User | undefined {
-    const users = this.getUsers();
-    return users.find((user) => user.email === email);
+public async getAllUsers(): Promise<User[]> {
+  try {
+      const result = await pool.query("SELECT id, email FROM users");
+      return result.rows;
+  } catch (error) {
+      console.error("Error retrieving users:", error);
+      throw new Error("Database query error");
   }
+}
 
-  public createUser(email: string, password: string): User {
-    const users = this.getUsers();
-    const newUser: User = { id: Date.now(), email, password };
-    users.push(newUser);
-    this.saveUsers(users);
-    return newUser;
-  }
+  // Obtener usuario por ID
 
-  public getAllUsers(): User[] {
-    return this.getUsers();
-  }
+  public async getUserById(id: number): Promise<User | null> {
+    try {
+        const result = await pool.query("SELECT id, email FROM users WHERE id = $1", [id]);
+        return result.rows[0] || null;
+    } catch (error) {
+        console.error("Error retrieving user by ID:", error);
+        throw new Error("Database query error");
+    }
+}
+
+  // Crear un nuevo usuario
+  public async createUser(email: string, password: string): Promise<User> {
+    try {
+        const result = await pool.query(
+            "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email",
+            [email, password]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error("Error creating user:", error);
+        throw new Error("Database query error");
+    }
+}
+
+  // Actualizar un usuario
+
+  public async updateUser(id: number, email: string, password: string): Promise<User | null> {
+    try {
+        const result = await pool.query(
+            "UPDATE users SET email = $1, password = $2 WHERE id = $3 RETURNING id, email",
+            [email, password, id]
+        );
+        return result.rows[0] || null;
+    } catch (error) {
+        console.error("Error updating user:", error);
+        throw new Error("Database query error");
+    }
+}
+
+  // Eliminar un usuario
+  public async deleteUser(id: number): Promise<void> {
+    try {
+        await pool.query("DELETE FROM users WHERE id = $1", [id]);
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        throw new Error("Database query error");
+    }
+}
 }
