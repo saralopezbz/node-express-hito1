@@ -1,7 +1,3 @@
-Aquí tienes un archivo `README.md` para el Hito 3, que incluye toda la información necesaria sobre la configuración, ejecución y pruebas realizadas:
-
----
-
 # **Proyecto Node.js - Hito 3**
 
 Este proyecto es una evolución del **Hito 2**, en el que se han implementado pruebas automatizadas utilizando **Jest** y **ts-jest** para garantizar el correcto funcionamiento de las rutas y la interacción con la base de datos PostgreSQL. El objetivo de este hito es asegurar la calidad del backend mediante pruebas unitarias e integradas.
