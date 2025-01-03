@@ -10,12 +10,9 @@ const PORT = 3000;
 // Middleware
 app.use(bodyParser.json());
 
-//conexion a la base de datos
+// Log para verificar que el servidor se inicializó correctamente
+console.log("Server initialization complete.");
 
-pool
-  .connect()
-  .then(() => console.log("conexion a la base de datos exitosa"))
-  .catch((error) => console.error("Error al conectar con la base de"));
 // Rutas
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
@@ -37,7 +34,11 @@ app.get("/protected", (req, res) => {
   }
 });
 
-// Servidor
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Inicia el servidor solo si el archivo es ejecutado directamente
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+export { app };

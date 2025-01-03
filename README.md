@@ -1,34 +1,40 @@
-Aquí tienes el `README.md` actualizado con la inclusión de los archivos `.prettierrc` y `package-lock.json` en la estructura del proyecto:
+Aquí tienes un archivo `README.md` para el Hito 3, que incluye toda la información necesaria sobre la configuración, ejecución y pruebas realizadas:
 
 ---
 
-# Proyecto Node.js - Hito 2
+# **Proyecto Node.js - Hito 3**
 
-Este proyecto es una evolución del **Hito 1**, implementando la gestión de usuarios y autenticación básica utilizando **PostgreSQL** como base de datos para persistencia. Se han añadido rutas y servicios para manejar operaciones de registro e inicio de sesión.
+Este proyecto es una evolución del **Hito 2**, en el que se han implementado pruebas automatizadas utilizando **Jest** y **ts-jest** para garantizar el correcto funcionamiento de las rutas y la interacción con la base de datos PostgreSQL. El objetivo de este hito es asegurar la calidad del backend mediante pruebas unitarias e integradas.
+
+---
+
+## **Características Principales**
+
+- Configuración y uso de **TypeScript**.
+- Gestión de usuarios y autenticación básica.
+- Conexión a **PostgreSQL** para la persistencia de datos.
+- Pruebas automatizadas con **Jest** y **ts-jest** para validar el correcto funcionamiento del sistema.
 
 ---
 
 ## **Instalación y Configuración**
 
 ### **1. Clonar el Repositorio**
-
 ```bash
-git clone https://github.com/saralopezbz/node-express-hito2.git
-cd node-express-hito2
+git clone https://github.com/saralopezbz/node-express-hito3.git
+cd node-express-hito3
 ```
 
 ### **2. Instalar Dependencias**
-
 ```bash
 npm install
 ```
 
 ### **3. Configurar la Base de Datos**
-
-Crear la base de datos y la tabla `users` en PostgreSQL:
+Asegúrate de que PostgreSQL esté en funcionamiento y crea la base de datos y la tabla `users`:
 
 ```sql
-CREATE DATABASE hito2_db;
+CREATE DATABASE hito3_db;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -37,8 +43,18 @@ CREATE TABLE users (
 );
 ```
 
-### **4. Ejecutar el Servidor**
+### **4. Configurar Variables de Entorno**
+Crea un archivo `.env` en la raíz del proyecto y agrega las configuraciones necesarias para la conexión a la base de datos. Ejemplo:
+```
+DB_USER=tu_usuario
+DB_HOST=localhost
+DB_NAME=hito3_db
+DB_PASSWORD=tu_contraseña
+DB_PORT=5432
+```
 
+### **5. Ejecutar el Servidor**
+Inicia el servidor en modo desarrollo:
 ```bash
 npm run dev
 ```
@@ -50,9 +66,7 @@ El servidor estará disponible en: `http://localhost:3000`.
 ## **Estructura del Proyecto**
 
 ```plaintext
-NODE-EXPRESS-HITO2/
-|-- imagenes/                  # Capturas de pruebas
-|-- node_modules/              # Dependencias del proyecto
+NODE-EXPRESS-HITO3/
 |-- src/
 |   |-- config/
 |   |   |-- db.ts              # Configuración de la conexión a PostgreSQL
@@ -62,69 +76,67 @@ NODE-EXPRESS-HITO2/
 |   |-- interfaces/
 |   |   |-- user.interface.ts  # Definición de la interfaz de Usuario
 |   |-- models/
-|   |   |-- user.model.ts      # Modelo de usuario (PostgreSQL)
+|   |   |-- user.model.ts      # Modelo de usuario
 |   |-- routes/
 |   |   |-- auth.route.ts      # Rutas de autenticación
 |   |   |-- user.route.ts      # Rutas de usuarios
 |   |-- services/
 |   |   |-- auth.service.ts    # Servicios de autenticación
 |   |   |-- user.service.ts    # Servicios de usuarios
+|   |-- __tests__/
+|   |   |-- app.test.ts        # Pruebas de rutas generales
+|   |   |-- userRoutes.test.ts # Pruebas de rutas de usuarios
 |   |-- index.ts               # Archivo principal del servidor
-|-- .gitignore                 # Archivos y carpetas ignorados por Git
-|-- .prettierrc                # Configuración de Prettier
-|-- package.json               # Dependencias y scripts
-|-- package-lock.json          # Versiones exactas de las dependencias instaladas
-|-- README.md                  # Documentación del proyecto
+|-- jest.config.js             # Configuración de Jest
 |-- tsconfig.json              # Configuración de TypeScript
+|-- package.json               # Dependencias y scripts
+|-- README.md                  # Documentación del proyecto
 ```
 
 ---
 
-## **Rutas Disponibles**
+## **Pruebas**
 
-### **1. Rutas de Autenticación**
+### **1. Ejecución de Pruebas**
+Este proyecto utiliza **Jest** y **ts-jest** para pruebas automatizadas. Para ejecutar las pruebas:
+```bash
+npm test
+```
 
-#### **Registro de Usuario**
-
-- **Endpoint:** `/auth/register`
-- **Método:** `POST`
-- **Body (JSON):**
+### **2. Pruebas Realizadas**
+#### **Ruta Pública (`/public`)**
+- **Método:** `GET`
+- **Prueba:** Devuelve un mensaje confirmando que la ruta está accesible.
+- **Respuesta Esperada:**
   ```json
   {
-    "email": "test@example.com",
-    "password": "123456"
-  }
-  ```
-- **Respuesta Exitosa:**
-  ```json
-  {
-    "message": "User registered successfully",
-    "newUser": {
-      "id": 1,
-      "email": "test@example.com"
-    }
+    "message": "This is a public route"
   }
   ```
 
-#### **Inicio de Sesión**
-
-- **Endpoint:** `/auth/login`
-- **Método:** `POST`
-- **Body (JSON):**
+#### **Ruta Protegida (`/protected`)**
+- **Método:** `GET`
+- **Prueba:** Acceso permitido solo con un header de autorización válido.
+- **Respuesta Esperada:**
   ```json
   {
-    "email": "test@example.com",
-    "password": "123456"
+    "message": "You have accessed a protected route"
   }
   ```
-- **Respuesta Exitosa:**
+
+#### **Ruta de Usuarios (`/users`)**
+- **Método:** `GET`
+- **Prueba:** Devuelve una lista de usuarios en formato JSON.
+- **Respuesta Esperada:** Un arreglo de usuarios.
+
+#### **Ruta de Usuario por ID (`/users/:id`)**
+- **Método:** `GET`
+- **Prueba:** Devuelve un usuario específico.
+- **Respuesta Esperada:**
   ```json
   {
-    "message": "Login successful",
-    "user": {
-      "id": 1,
-      "email": "test@example.com"
-    }
+    "id": 1,
+    "email": "test@example.com"
   }
   ```
 
@@ -132,23 +144,17 @@ NODE-EXPRESS-HITO2/
 
 ## **Tecnologías Utilizadas**
 
-- **Node.js** y **Express** para el servidor.
+- **Node.js** y **Express** para el backend.
 - **TypeScript** para tipado estático.
 - **PostgreSQL** para la base de datos.
-- **Prettier** para el formato del código.
+- **Jest** y **ts-jest** para pruebas automatizadas.
 
 ---
 
-## **Pruebas**
-
-Se realizaron pruebas de las rutas de autenticación (`/auth/register` y `/auth/login`) utilizando **Thunder Client**, confirmando los siguientes flujos:
-- Registro exitoso de nuevos usuarios.
-- Validación de credenciales para inicio de sesión.
+## **Conclusión**
+Con este hito, se han integrado pruebas automatizadas para garantizar la estabilidad y calidad del backend. El proyecto ahora incluye pruebas para rutas clave y está preparado para ser extendido con nuevas funcionalidades.
 
 ---
 
 ## **Licencia**
-
-Este proyecto está bajo la licencia MIT. Puedes consultar más detalles en el archivo `LICENSE`.
-
----
+Este proyecto está bajo la licencia MIT.
