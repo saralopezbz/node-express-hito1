@@ -1,7 +1,3 @@
-Aquí tienes el `README.md` actualizado con la inclusión de los archivos `.prettierrc` y `package-lock.json` en la estructura del proyecto:
-
----
-
 # Proyecto Node.js - Hito 2
 
 Este proyecto es una evolución del **Hito 1**, implementando la gestión de usuarios y autenticación básica utilizando **PostgreSQL** como base de datos para persistencia. Se han añadido rutas y servicios para manejar operaciones de registro e inicio de sesión.
